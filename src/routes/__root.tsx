@@ -12,6 +12,9 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: APP_NAME },
       { name: "theme-color", content: "#0f7a43" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-title", content: APP_NAME },
       {
         name: "description",
         content: "ODEPC-യിൽ ഏത് രാജ്യത്തും ആർട്ട് ടീച്ചർ ഒഴിവ് വന്നാൽ ഉടൻ അറിയിപ്പ്.",

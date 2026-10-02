@@ -115,15 +115,16 @@ function newsHits(html: string, today: string): ArtPosting[] {
 async function scan(): Promise<WatchResult> {
   const today = todayISO();
   const first = await pullJson<JobsPage>(`${ORIGIN}/job/get-job?page=1`);
-  const last = Math.max(1, Math.min(first.pagination?.last_page ?? 1, 12));
-  const [restPages, home, news] = await Promise.all([
+  const last = Math.max(1, Math.min(first.pagination?.last_page ?? 1, 8));
+  const [restPages, news] = await Promise.all([
     Promise.all(
-      Array.from({ length: last - 1 }, (_, index) =>
-        pullJson<JobsPage>(`${ORIGIN}/job/get-job?page=${index + 2}`),
+      Array.from({ length: Math.max(0, last - 1) }, (_, index) =>
+        pullJson<JobsPage>(`${ORIGIN}/job/get-job?page=${index + 2}`).catch(() => ({ jobs: [] })),
       ),
     ),
-    pull(`${ORIGIN}/`).then((response) => (response.ok ? response.text() : "")),
-    pull(`${ORIGIN}/home/news-list`).then((response) => (response.ok ? response.text() : "")),
+    pull(`${ORIGIN}/home/news-list`)
+      .then((response) => (response.ok ? response.text() : ""))
+      .catch(() => ""),
   ]);
 
   const jobs = [first, ...restPages].flatMap((page) => page.jobs ?? []);
@@ -132,7 +133,7 @@ async function scan(): Promise<WatchResult> {
     const posting = fromJob(job, today);
     if (posting) matched.set(posting.title.toLowerCase(), posting);
   }
-  for (const posting of [...newsHits(home, today), ...newsHits(news, today)]) {
+  for (const posting of newsHits(news, today)) {
     const key = posting.title.toLowerCase();
     if ([...matched.keys()].some((title) => key.includes(title) || title.includes(key.slice(0, 48)))) {
       continue;

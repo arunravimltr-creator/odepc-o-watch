@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Bell, BellRing, ExternalLink, RefreshCw } from "lucide-react";
 import { checkOdepc } from "@/lib/odepc.functions";
 import type { ArtPosting, WatchResult } from "@/lib/odepc";
@@ -50,21 +50,22 @@ export function WatchScreen() {
   const [permission, setPermission] = useState<NotificationPermission | "unsupported">("default");
   const [secondsLeft, setSecondsLeft] = useState(POLL_MS / 1000);
   const [nonce, setNonce] = useState(0);
+  const runId = useRef(0);
 
   useEffect(() => {
     setPermission(typeof Notification === "undefined" ? "unsupported" : Notification.permission);
   }, []);
 
   useEffect(() => {
-    let cancelled = false;
+    const id = ++runId.current;
     checkOdepc()
       .then((data) => {
-        if (cancelled) return;
+        if (id !== runId.current) return;
         setPhase({ kind: "ready", data });
         setSecondsLeft(POLL_MS / 1000);
       })
       .catch((error: unknown) => {
-        if (cancelled) return;
+        if (id !== runId.current) return;
         const message = error instanceof Error ? error.message : "പരിശോധന പരാജയപ്പെട്ടു";
         setPhase((current) => ({
           kind: "error",
@@ -72,9 +73,6 @@ export function WatchScreen() {
           stale: current.kind === "ready" ? current.data : current.kind === "error" ? current.stale : null,
         }));
       });
-    return () => {
-      cancelled = true;
-    };
   }, [nonce]);
 
   useEffect(() => {
@@ -82,14 +80,9 @@ export function WatchScreen() {
     const clock = window.setInterval(() => {
       setSecondsLeft((value) => (value <= 1 ? POLL_MS / 1000 : value - 1));
     }, 1000);
-    const onVisible = () => {
-      if (document.visibilityState === "visible") setNonce((value) => value + 1);
-    };
-    document.addEventListener("visibilitychange", onVisible);
     return () => {
       window.clearInterval(poll);
       window.clearInterval(clock);
-      document.removeEventListener("visibilitychange", onVisible);
     };
   }, []);
 
@@ -144,7 +137,7 @@ export function WatchScreen() {
 
         <InstallApp />
 
-        <section className="flex flex-1 flex-col items-center justify-center py-8 text-center">
+        <section className="flex flex-1 flex-col items-center justify-center py-4 text-center">
           <div className="mark" aria-hidden="true">
             <span className={`ring ${alert ? "ring-pulse" : ""}`} />
             <span className="mark-letter">O</span>

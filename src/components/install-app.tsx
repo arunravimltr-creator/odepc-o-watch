@@ -6,55 +6,41 @@ type InstallPrompt = Event & {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 };
 
-function runningAsApp() {
-  const nav = navigator as Navigator & { standalone?: boolean };
-  return window.matchMedia("(display-mode: standalone)").matches || Boolean(nav.standalone);
-}
-
 export function InstallApp() {
   const [prompt, setPrompt] = useState<InstallPrompt | null>(null);
-  const [installed, setInstalled] = useState(false);
   const [ios, setIos] = useState(false);
-  const [help, setHelp] = useState(false);
+  const [framed, setFramed] = useState(false);
 
   useEffect(() => {
-    setInstalled(runningAsApp());
     setIos(/iphone|ipad|ipod/i.test(navigator.userAgent));
+    setFramed(window.self !== window.top);
     if ("serviceWorker" in navigator) {
-      void navigator.serviceWorker.register("/sw.js").catch(() => undefined);
+      const hadController = Boolean(navigator.serviceWorker.controller);
+      void navigator.serviceWorker.getRegistrations().then(async (registrations) => {
+        await Promise.all(registrations.map((registration) => registration.unregister()));
+        if (hadController && sessionStorage.getItem("owatch-sw-cleared") !== "1") {
+          sessionStorage.setItem("owatch-sw-cleared", "1");
+          window.location.reload();
+        }
+      });
     }
     const onPrompt = (event: Event) => {
       event.preventDefault();
       setPrompt(event as InstallPrompt);
     };
-    const onInstalled = () => {
-      setInstalled(true);
-      setPrompt(null);
-      setHelp(false);
-    };
     window.addEventListener("beforeinstallprompt", onPrompt);
-    window.addEventListener("appinstalled", onInstalled);
-    return () => {
-      window.removeEventListener("beforeinstallprompt", onPrompt);
-      window.removeEventListener("appinstalled", onInstalled);
-    };
+    return () => window.removeEventListener("beforeinstallprompt", onPrompt);
   }, []);
 
   async function install() {
-    if (!prompt) {
-      setHelp(true);
+    if (prompt) {
+      await prompt.prompt();
+      setPrompt(null);
       return;
     }
-    await prompt.prompt();
-    const choice = await prompt.userChoice;
-    setPrompt(null);
-    if (choice.outcome === "accepted") setInstalled(true);
-  }
-
-  if (installed) {
-    return (
-      <p className="mt-4 mb-3 text-center text-sm text-muted">ഹോം സ്ക്രീനിലെ ആപ്പിൽ നിന്ന് തുറന്നിരിക്കുന്നു.</p>
-    );
+    if (framed) {
+      window.open(window.location.href, "_blank", "noopener");
+    }
   }
 
   return (
@@ -65,7 +51,9 @@ export function InstallApp() {
         </span>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold">ഫോണിൽ ആപ്പായി വയ്ക്കുക</p>
-          <p className="text-xs leading-relaxed text-muted">ഹോം സ്ക്രീനിൽ O ഐക്കൺ. അവിടെ നിന്ന് തുറക്കാം.</p>
+          <p className="text-xs leading-relaxed text-muted">
+            ഈ ചാറ്റിൽ നിന്ന് നേരിട്ട് ഇൻസ്റ്റാൾ ആവില്ല. പബ്ലിഷ് ചെയ്ത ലിങ്ക് ഫോൺ ബ്രൗസറിൽ തുറക്കുക.
+          </p>
         </div>
       </div>
       <button
@@ -74,25 +62,26 @@ export function InstallApp() {
         className="chip mt-3 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold"
       >
         <Smartphone className="size-4" aria-hidden="true" />
-        ഇൻസ്റ്റാൾ ചെയ്യുക
+        {prompt ? "ഇൻസ്റ്റാൾ ചെയ്യുക" : framed ? "ബ്രൗസറിൽ തുറക്കുക" : "ഇൻസ്റ്റാൾ ഘട്ടങ്ങൾ"}
       </button>
-      {help ? (
-        <ol className="mt-3 list-decimal space-y-1 pl-5 text-sm leading-relaxed text-muted">
+      <details className="mt-3">
+        <summary className="cursor-pointer text-sm font-semibold">എങ്ങനെ വയ്ക്കാം</summary>
+        <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm leading-relaxed text-muted">
           {ios ? (
             <>
-              <li>ഈ പേജ് Safari-യിൽ തുറക്കുക.</li>
-              <li>താഴെയുള്ള ഷെയർ അമ്പടയാളം അമർത്തുക.</li>
-              <li>Add to Home Screen തിരഞ്ഞെടുക്കുക.</li>
+              <li>Safari-യിൽ പബ്ലിഷ് ചെയ്ത പേജ് തുറക്കുക.</li>
+              <li>താഴെ ഷെയർ അമ്പടയാളം അമർത്തുക.</li>
+              <li>Add to Home Screen തിരഞ്ഞെടുക്കുക. ഐക്കൺ O ആയിരിക്കും.</li>
             </>
           ) : (
             <>
-              <li>ഈ പേജ് ഫോണിലെ Chrome-ൽ തുറക്കുക.</li>
-              <li>മെനുവിൽ Install app അല്ലെങ്കിൽ Add to Home screen തിരഞ്ഞെടുക്കുക.</li>
-              <li>ഹോം സ്ക്രീനിൽ O ഐക്കൺ വരും.</li>
+              <li>Chrome-ൽ പബ്ലിഷ് ചെയ്ത പേജ് തുറക്കുക.</li>
+              <li>മെനുവിലെ Install app അല്ലെങ്കിൽ Add to Home screen തിരഞ്ഞെടുക്കുക.</li>
+              <li>ഹോം സ്ക്രീനിലെ O ഐക്കൺ തൊട്ടാൽ ആപ്പ് തുറക്കും.</li>
             </>
           )}
         </ol>
-      ) : null}
+      </details>
     </section>
   );
 }
