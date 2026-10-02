@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fraunces", "Times New Roman", serif;
+  --font-sans: "Noto Sans Malayalam", "Noto Sans", sans-serif;
+  --color-canvas: #0f7a43;
+  --color-ink: #f4fff8;
+  --color-muted: #d7f3e4;
+  --color-card: #ffffff1f;
+  --color-line: #ffffff3d;
+  --color-deep: #084428;
+  --color-chip: #06351f;
+  --radius: 1.25rem;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  html,
+  body {
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background: var(--color-canvas);
+    color: var(--color-ink);
+  }
+}
+
+[data-tone="watch"] {
+  --color-canvas: #0f7a43;
+  --color-ink: #f4fff8;
+  --color-muted: #d7f3e4;
+  --color-card: #ffffff1c;
+  --color-line: #ffffff3d;
+  --color-deep: #084428;
+  --color-chip: #06351f;
+}
+
+[data-tone="alert"] {
+  --color-canvas: #c4232b;
+  --color-ink: #fff6f6;
+  --color-muted: #ffd9d9;
+  --color-card: #ffffff1f;
+  --color-line: #ffffff47;
+  --color-deep: #7d1016;
+  --color-chip: #4c090d;
+}
+
+.tone {
+  min-height: 100dvh;
+  background:
+    radial-gradient(900px 520px at 50% -8%, color-mix(in srgb, white 18%, transparent), transparent 60%),
+    var(--color-canvas);
+  color: var(--color-ink);
+}
+
+.mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 7.5rem;
+  height: 7.5rem;
+}
+
+.mark-letter {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: 5.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.ring {
+  position: absolute;
+  inset: 0.35rem;
+  border: 2px solid color-mix(in srgb, var(--color-ink) 55%, transparent);
+  border-radius: 999px;
+}
+
+[data-tone="alert"] .ring-pulse {
+  animation: ring-out 1.8s ease-out infinite;
+}
+
+.panel {
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+}
+
+.chip {
+  background: var(--color-chip);
+  color: var(--color-ink);
+}
+
+@keyframes ring-out {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-tone="alert"] .ring-pulse {
+    animation: none;
+  }
+}
