@@ -108,7 +108,7 @@ export function WatchScreen() {
     localStorage.setItem("owatch-notified", signature);
     const body = data.open.map((posting) => `${posting.title} — ${posting.location}`).join("\n");
     if (typeof Notification !== "undefined" && Notification.permission === "granted") {
-      new Notification("ODEPC — ആർട്ട് ടീച്ചർ ഒഴിവ്", { body, tag: "odepc-art-teacher" });
+      new Notification("ആർട്ട് ടീച്ചർ ഒഴിവ്", { body, tag: "odepc-art-teacher" });
     }
     try {
       chime();
@@ -135,7 +135,7 @@ export function WatchScreen() {
     <main data-tone={tone} className="tone">
       <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col px-5 py-8">
         <header className="flex items-center justify-between gap-3">
-          <p className="text-sm font-semibold tracking-wide">ODEPC മാത്രം</p>
+          <p className="text-sm font-semibold tracking-wide">ODEPC + നോർക്ക</p>
           <p className="text-sm text-muted">
             {data ? formatClock(data.checkedAt) : "ഇപ്പോൾ"}
           </p>
@@ -202,7 +202,7 @@ export function WatchScreen() {
             </button>
           </div>
           <p className="text-center text-xs text-muted">
-            odepc.kerala.gov.in · ഓരോ 20 സെക്കൻഡിലും
+            odepc.kerala.gov.in · norkaroots.kerala.gov.in · ഓരോ 20 സെക്കൻഡിലും
             {data ? ` · ${data.scannedJobs} ജോലികൾ` : ""}
           </p>
         </footer>
@@ -215,7 +215,7 @@ function StatusCopy({ phase, alert }: { phase: Phase; alert: boolean }) {
   if (phase.kind === "loading") {
     return (
       <>
-        <h1 className="mt-6 text-3xl font-bold leading-tight">ODEPC നോക്കുന്നു</h1>
+        <h1 className="mt-6 text-3xl font-bold leading-tight">രണ്ട് സൈറ്റും നോക്കുന്നു</h1>
         <p className="mt-3 max-w-sm text-base leading-relaxed text-muted">
           ഏത് രാജ്യത്തും ആർട്ട് ടീച്ചർ വിവരം വന്നാൽ ഈ ആപ്പ് മുഴുവൻ ചുവക്കും.
         </p>
@@ -228,7 +228,7 @@ function StatusCopy({ phase, alert }: { phase: Phase; alert: boolean }) {
       <>
         <h1 className="mt-6 text-3xl font-bold leading-tight">ബന്ധം കിട്ടിയില്ല</h1>
         <p className="mt-3 max-w-sm text-base leading-relaxed text-muted">
-          ODEPC സൈറ്റ് ഇപ്പോൾ മറുപടി തന്നില്ല. ഒഴിവ് ഇല്ല എന്ന് കരുതരുത്. വീണ്ടും നോക്കുന്നു.
+          ODEPC അല്ലെങ്കിൽ നോർക്ക ഇപ്പോൾ മറുപടി തന്നില്ല. ഒഴിവ് ഇല്ല എന്ന് കരുതരുത്. വീണ്ടും നോക്കുന്നു.
         </p>
       </>
     );
@@ -288,7 +288,7 @@ function PostingBody({ posting, compact = false }: { posting: ArtPosting; compac
         rel="noreferrer"
         className="inline-flex h-11 items-center gap-2 text-sm font-semibold underline decoration-line underline-offset-4"
       >
-        ODEPC-യിൽ തുറക്കുക
+        {posting.board === "NORKA" ? "നോർക്കയിൽ തുറക്കുക" : "ODEPC-യിൽ തുറക്കുക"}
         <ExternalLink className="size-4" aria-hidden="true" />
       </a>
     </div>

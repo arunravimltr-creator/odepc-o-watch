@@ -17,7 +17,7 @@ export const Route = createRootRoute({
       { name: "apple-mobile-web-app-title", content: APP_NAME },
       {
         name: "description",
-        content: "ODEPC-യിൽ ഏത് രാജ്യത്തും ആർട്ട് ടീച്ചർ ഒഴിവ് വന്നാൽ ഉടൻ അറിയിപ്പ്.",
+        content: "ODEPC-യിലും നോർക്ക റൂട്ട്സിലും ഏത് രാജ്യത്തും ആർട്ട് ടീച്ചർ ഒഴിവ് വന്നാൽ ഉടൻ അറിയിപ്പ്.",
       },
     ],
     links: [
