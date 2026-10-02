@@ -52,7 +52,7 @@ export function InstallApp() {
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold">ഫോണിൽ ആപ്പായി വയ്ക്കുക</p>
           <p className="text-xs leading-relaxed text-muted">
-            ഈ ചാറ്റിൽ നിന്ന് നേരിട്ട് ഇൻസ്റ്റാൾ ആവില്ല. പബ്ലിഷ് ചെയ്ത ലിങ്ക് ഫോൺ ബ്രൗസറിൽ തുറക്കുക.
+            ഹോം ഐക്കൺ പച്ച O ആണ്. തുറന്നാൽ സ്ക്രീൻ മുഴുവൻ പച്ചയോ ചുവപ്പോ ആകും. ചാരനിറം G മാറ്റി വീണ്ടും വയ്ക്കുക.
           </p>
         </div>
       </div>
@@ -75,9 +75,9 @@ export function InstallApp() {
             </>
           ) : (
             <>
+              <li>പഴയ ചാരനിറം ഐക്കൺ അമർത്തിപ്പിടിച്ച് നീക്കം ചെയ്യുക.</li>
               <li>Chrome-ൽ പബ്ലിഷ് ചെയ്ത പേജ് തുറക്കുക.</li>
-              <li>മെനുവിലെ Install app അല്ലെങ്കിൽ Add to Home screen തിരഞ്ഞെടുക്കുക.</li>
-              <li>ഹോം സ്ക്രീനിലെ O ഐക്കൺ തൊട്ടാൽ ആപ്പ് തുറക്കും.</li>
+              <li>Install app അല്ലെങ്കിൽ Add to Home screen. പുതിയ ഐക്കൺ പച്ച O ആണ്.</li>
             </>
           )}
         </ol>

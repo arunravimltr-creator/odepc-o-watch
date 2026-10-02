@@ -92,6 +92,12 @@ export function WatchScreen() {
 
   useEffect(() => {
     paintChrome(alert);
+    const nav = navigator as Navigator & {
+      setAppBadge?: (count?: number) => Promise<void>;
+      clearAppBadge?: () => Promise<void>;
+    };
+    if (alert) void nav.setAppBadge?.(1);
+    else void nav.clearAppBadge?.();
   }, [alert]);
 
   useEffect(() => {

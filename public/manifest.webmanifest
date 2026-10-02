@@ -2,7 +2,7 @@
   "name": "O Watch",
   "short_name": "O Watch",
   "description": "ODEPC-യിൽ ആർട്ട് ടീച്ചർ ഒഴിവ് വന്നാൽ ഉടൻ അറിയിപ്പ്.",
-  "id": "/",
+  "id": "/?app=owatch",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
