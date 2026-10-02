@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Bell, BellRing, ExternalLink, RefreshCw } from "lucide-react";
 import { checkOdepc } from "@/lib/odepc.functions";
 import type { ArtPosting, WatchResult } from "@/lib/odepc";
+import { InstallApp } from "@/components/install-app";
 
 const POLL_MS = 20_000;
 const WATCH_COLOR = "#0f7a43";
@@ -140,6 +141,8 @@ export function WatchScreen() {
             {data ? formatClock(data.checkedAt) : "ഇപ്പോൾ"}
           </p>
         </header>
+
+        <InstallApp />
 
         <section className="flex flex-1 flex-col items-center justify-center py-8 text-center">
           <div className="mark" aria-hidden="true">

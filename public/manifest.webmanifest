@@ -1,0 +1,32 @@
+{
+  "name": "O Watch",
+  "short_name": "O Watch",
+  "description": "ODEPC-യിൽ ആർട്ട് ടീച്ചർ ഒഴിവ് വന്നാൽ ഉടൻ അറിയിപ്പ്.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f7a43",
+  "theme_color": "#0f7a43",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
