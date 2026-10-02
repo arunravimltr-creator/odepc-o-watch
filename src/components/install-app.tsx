@@ -15,14 +15,7 @@ export function InstallApp() {
     setIos(/iphone|ipad|ipod/i.test(navigator.userAgent));
     setFramed(window.self !== window.top);
     if ("serviceWorker" in navigator) {
-      const hadController = Boolean(navigator.serviceWorker.controller);
-      void navigator.serviceWorker.getRegistrations().then(async (registrations) => {
-        await Promise.all(registrations.map((registration) => registration.unregister()));
-        if (hadController && sessionStorage.getItem("owatch-sw-cleared") !== "1") {
-          sessionStorage.setItem("owatch-sw-cleared", "1");
-          window.location.reload();
-        }
-      });
+      void navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => undefined);
     }
     const onPrompt = (event: Event) => {
       event.preventDefault();
@@ -52,7 +45,7 @@ export function InstallApp() {
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold">ഫോണിൽ ആപ്പായി വയ്ക്കുക</p>
           <p className="text-xs leading-relaxed text-muted">
-            ഹോം ഐക്കൺ പച്ച O ആണ്. തുറന്നാൽ സ്ക്രീൻ മുഴുവൻ പച്ചയോ ചുവപ്പോ ആകും. ചാരനിറം G മാറ്റി വീണ്ടും വയ്ക്കുക.
+            grok-sandbox.com താൽക്കാലികമാണ്. അവിടെ Install അടയ്ക്കും, ഐക്കൺ G ആകും, പിന്നെ Session terminated വരും. Publish ചെയ്ത ശാശ്വത ലിങ്കിൽ മാത്രമേ പച്ച O ഐക്കണോടെ എന്നും തുറക്കൂ.
           </p>
         </div>
       </div>
